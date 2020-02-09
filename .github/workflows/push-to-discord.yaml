@@ -1,0 +1,17 @@
+name: Push to Discord
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Pull repository
+      uses: actions/checkout@v2
+    
+    - name: Post HTML file
+      run: | export FILENAME=Common_Bunch_v$(git describe --abbrev=0 --tags | tr -cd '[a-zA-Z0-9]').html
+        mv ./*.html $FILENAME
+        curl -F "file=@./$FILENAME" ${{ secrets.Webhook }} 
